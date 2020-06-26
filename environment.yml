@@ -1,4 +1,3 @@
-name: r_environment
 channels:
   - r
   - conda-forge
