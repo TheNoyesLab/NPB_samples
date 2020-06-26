@@ -176,6 +176,3 @@ dependencies:
   - r-xts=0.11_2
   - r-yaml=2.2.0
   - r-zoo=1.8_6
-  - readline=7
-  - rpy2=2.9.4
-  - rstudio=1.1.456
