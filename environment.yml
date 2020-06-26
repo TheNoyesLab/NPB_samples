@@ -5,9 +5,8 @@ channels:
   - defaults
   - bioconda
 dependencies:
-  - r-ggrepel-0.8.2
-  - r-purrr-0.3.2
-  - r-ggthemes-4.2.0
+  - r-ggrepel=0.8.2
+  - r-ggthemes=4.2.0
   - r-askpass=1
   - r-assertthat=0.2.1
   - r-backports=1.1.4
