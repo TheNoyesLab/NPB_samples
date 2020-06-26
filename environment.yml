@@ -142,7 +142,6 @@ dependencies:
   - r-rprojroot=1.3_2
   - r-rsconnect=0.8.13
   - r-rsqlite=2.1.1
-  - r-rstudioapi=0.1
   - r-rvest=0.3.3
   - r-scales=1.0.0
   - r-selectr=0.4_1
