@@ -3,6 +3,7 @@ channels:
   - conda-forge
   - anaconda
   - defaults
+  - bioconda
 dependencies:
   - r-askpass=1
   - r-assertthat=0.2.1
@@ -175,3 +176,20 @@ dependencies:
   - r-xts=0.11_2
   - r-yaml=2.2.0
   - r-zoo=1.8_6
+  - bioconductor-biobase=2.46.0=r36h516909a_0
+  - bioconductor-biocgenerics=0.32.0=r36_0
+  - bioconductor-biomformat=1.14.0=r36_0
+  - bioconductor-biostrings=2.54.0=r36h516909a_0
+  - bioconductor-ihw=1.14.0=r36_0
+  - bioconductor-iranges=2.20.0=r36h516909a_0
+  - bioconductor-limma=3.42.0=r36h516909a_0
+  - bioconductor-lpsymphony=1.14.0=r36he1b5a44_0
+  - bioconductor-metagenomeseq=1.28.0=r36_0
+  - bioconductor-multtest=2.42.0=r36h516909a_0
+  - bioconductor-phyloseq=1.30.0=r36_0
+  - bioconductor-rhdf5=2.30.0=r36he1b5a44_0
+  - bioconductor-rhdf5lib=1.8.0=r36h516909a_0
+  - bioconductor-s4vectors=0.24.0=r36h516909a_0
+  - bioconductor-wrench=1.4.0=r36_0
+  - bioconductor-xvector=0.26.0=r36h516909a_0
+  - bioconductor-zlibbioc=1.32.0=r36h516909a_0
