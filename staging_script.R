@@ -116,6 +116,14 @@ AMR_exploratory_analyses = list(
     subsets = list(),
     exploratory_var = 'PenID',
     order = ''
+  ),  
+  # Analysis 1
+  # Description: 
+  list(
+    name = 'CollectionDate',
+    subsets = list(),
+    exploratory_var = 'CollectionDate',
+    order = ''
   )
 )
 
@@ -144,6 +152,14 @@ microbiome_exploratory_analyses = list(
     name = 'PenID',
     subsets = list(),
     exploratory_var = 'PenID',
+    order = ''
+  ),  
+  # Analysis 1
+  # Description: 
+  list(
+    name = 'CollectionDate',
+    subsets = list(),
+    exploratory_var = 'CollectionDate',
     order = ''
   )
 )
@@ -224,5 +240,3 @@ source('scripts/metagenomeSeq_megaresv2.R')
 ## For ZIG model results
 #source('scripts/print_microbiome_ZIG_results.R')
 #source('scripts/print_AMR_ZIG_results.R')
-
-
