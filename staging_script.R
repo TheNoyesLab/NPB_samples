@@ -42,25 +42,6 @@ microbiome_temp_metadata_file = "NPB_sample_metadata.csv"
 kraken_temp_file = "kraken_analytic_matrix.csv"
 
 
-## First, the 16S files. 
-# These are the files you'll need to export from qiime2
-#qiime tools export project-taxonomy.qza --output-dir exported-biom-table-taxa
-#qiime tools export project-rep-seqs.qza --output-dir exported-rep-seqs
-#qiime tools export project-aligned-masked-rooted.qza --output-dir exported-tree
-#qiime tools export project-dada-table-filtered.qza --output-dir exported-biom-table
-#then you need to convert the biom file to "json" using qiime1
-#biom convert -i feature-table.biom -o otu_table_json.biom --table-type="OTU table" --to-json
-
-##
-## If you are using qiime2 results, uncomment the four lines below and specify the location to each file
-##
-# biom_file <- "data/test_data/exported-biom-table/otu_table_json.biom"
-# tre_file <- "data/test_data/exported-tree/tree.nwk"
-# tax_fasta <- "data/test_data/exported-rep-seqs/dna-sequences.fasta" #https://data.qiime2.org/2017.6/tutorials/training-feature-classifiers/85_otus.fasta
-# taxa_file <- "data/test_data/exported-biom-table-taxa/taxonomy.tsv" #https://data.qiime2.org/2017.6/tutorials/training-feature-classifiers/85_otu_taxonomy.txt
-
-
-
 ###################
 ## User Controls ##
 ###################
@@ -73,24 +54,6 @@ kraken_temp_file = "kraken_analytic_matrix.csv"
 # your metadata.csv file that you want
 # to use for EXPLORATORY analysis (NMDS, PCA, alpha rarefaction, barplots)
 # NOTE: Exploratory variables cannot be numeric. 
-
-#AMR_exploratory_analyses = list(
-#  # Analysis 1
-#  # Description: 
-#  list(
-#    name = 'Variable1',
-#    subsets = list(),
-#    exploratory_var = 'Variable1'
-#  ),
-#  # Analysis 2
-#  # Description: 
-#  list(
-#    name = 'Variable2_Variable1_Subset',
-#    subsets = list('Variable1 == Value1'),
-#    exploratory_var = 'Variable2'
-#  )
-#)
-
 
 AMR_exploratory_analyses = list(
 # Analysis Dilution
@@ -107,9 +70,9 @@ AMR_exploratory_analyses = list(
     name = 'TreatmentGroup',
     subsets = list(),
     exploratory_var = 'TreatmentGroup',
-    order = ''
+    order = c('Grp1','Grp2','Grp3')
   ),  
-  # Analysis 1
+  # Analysis 
   # Description: 
   list(
     name = 'PenID',
@@ -117,12 +80,12 @@ AMR_exploratory_analyses = list(
     exploratory_var = 'PenID',
     order = ''
   ),  
-  # Analysis 1
+  # Analysis 
   # Description: 
   list(
-    name = 'CollectionDate',
-    subsets = list(),
-    exploratory_var = 'CollectionDate',
+    name = 'Group1',
+    subsets = list('TreatmentGroup == Grp1'),
+    exploratory_var = 'PenID',
     order = ''
   )
 )
@@ -144,7 +107,7 @@ microbiome_exploratory_analyses = list(
     name = 'TreatmentGroup',
     subsets = list(),
     exploratory_var = 'TreatmentGroup',
-    order = ''
+    order = c('Grp1','Grp2','Grp3')
   ),  
   # Analysis 1
   # Description: 
@@ -154,12 +117,12 @@ microbiome_exploratory_analyses = list(
     exploratory_var = 'PenID',
     order = ''
   ),  
-  # Analysis 1
+  # Analysis 
   # Description: 
   list(
-    name = 'CollectionDate',
-    subsets = list(),
-    exploratory_var = 'CollectionDate',
+    name = 'Group1',
+    subsets = list('TreatmentGroup == Grp1'),
+    exploratory_var = 'PenID',
     order = ''
   )
 )
@@ -171,29 +134,6 @@ microbiome_exploratory_analyses = list(
 # parent variable then child variable without a space inbetween, for example:
 # PVar1Cvar1 where the model matrix equation is ~ 0 + Pvar1.
 
-#AMR_statistical_analyses = list(
-#  # Analysis 1
-#  # Description: 
-#  list(
-#    name = 'Variable1',
-#    subsets = list(),
-#    model_matrix = '~ 0 + Variable1 + Variable2',
-#    contrasts = list('Variable1Value1 - Variable1Value2'),
-#    random_effect = NA
-#  ),
-#  # Analysis 2
-#  # Description: 
-#  list(
-#    name = 'Variable2_Variable1_Subset',
-#    subsets = list('Variable1 == Value1'),
-#    model_matrix = '~ 0 + Variable2',
-#    contrasts = list('Variable2Value1 - Variable2Value2',
-#                     'Variable2Value1 - Variable2Value3',
-#                     'Variable2Value2 - Variable2Value3'),
-#    random_effect = NA
-#  )
-#)
-
 AMR_statistical_analyses = list(
   # Analysis 1
   # Description: 
@@ -201,7 +141,8 @@ AMR_statistical_analyses = list(
     name = 'Treatment',
     subsets = list(),
     model_matrix = '~ 0 + TreatmentGroup ',
-    contrasts = list(''),
+    contrasts = list('TreatmentGroupGrp1 - TreatmentGroupGrp2','TreatmentGroupGrp1 - TreatmentGroupGrp3',
+                     'TreatmentGroupGrp2 - TreatmentGroupGrp3'),
     random_effect = NA
   )
 )
@@ -213,19 +154,15 @@ microbiome_statistical_analyses = list(
     name = 'Treatment',
     subsets = list(),
     model_matrix = '~ 0 + TreatmentGroup ',
-    contrasts = list(''),
+    contrasts = list('TreatmentGroupGrp1 - TreatmentGroupGrp2','TreatmentGroupGrp1 - TreatmentGroupGrp3',
+                     'TreatmentGroupGrp2 - TreatmentGroupGrp3'),
     random_effect = NA
   )
 )
 
 
-## Run the analysis
-#
-## Pick the correct script that handles resistome data and/or microbiome data. 
-# Choose one of the following scripts
+## Run the analysis on the microbiome and resistome data
 source('scripts/metagenomeSeq_kraken.R')
-#source('scripts/metagenomeSeq_megares_qiime.R')
-#source('scripts/metagenomeSeq_qiime2.R')
 source('scripts/metagenomeSeq_megaresv2.R')
 
 # After running this script, these are the useful objects that contain all the data aggregated to different levels
@@ -234,9 +171,133 @@ source('scripts/metagenomeSeq_megaresv2.R')
 
 # Run code to make some exploratory figures, zero inflated gaussian model, and output count matrices.
 ## Choose one of the following scripts:
-#source('scripts/print_microbiome_figures.R')
-#source('scripts/print_AMR_figures.R')
+source('scripts/print_microbiome_figures.R')
+source('scripts/print_AMR_figures.R')
 
 ## For ZIG model results
-#source('scripts/print_microbiome_ZIG_results.R')
-#source('scripts/print_AMR_ZIG_results.R')
+source('scripts/print_microbiome_ZIG_results.R')
+source('scripts/print_AMR_ZIG_results.R')
+
+# I just added this optional script to create phyloseq objects, so please excuse any errors
+source('scripts/load_phyloseq_data.R')
+
+# To further analyze your data and create custom figures, use these R objects containing counts in the "melted" format
+# 
+# Sample metadata
+metadata
+microbiome_metadata
+## Resistome count data ("RequiresSNPConfirmation" counts removed)
+amr_melted_analytic
+amr_melted_raw_analytic
+## Microbiome count data
+microbiome_melted_analytic
+microbiome_melted_analytic
+
+## You can also use the following list objects which contain metagenomeSeq data:
+# Resistome metagenomeSeq objects
+AMR_analytic_data
+# Microbiome metagenomeSeq objects
+microbiome_analytic_data
+# Finally, here are two phyloseq objects that we are still experimenting with:
+amr.ps
+kraken_microbiome.ps
+
+
+##########################
+# Extra code for figures #
+##########################
+
+### Start of code for figures, combine table objects to include meta
+setkey(amr_melted_raw_analytic,ID) 
+setkey(amr_melted_analytic,ID) 
+setkey(microbiome_melted_analytic,ID)
+# Set keys for both metadata files
+setkey(metadata,ID)
+setkey(microbiome_metadata,ID)
+
+# Combine counts with metadata
+microbiome_melted_analytic <- microbiome_melted_analytic[microbiome_metadata]
+amr_melted_raw_analytic <- amr_melted_raw_analytic[metadata]
+amr_melted_analytic <- amr_melted_analytic[metadata]
+
+## 
+## Relative abundance barplot with label for "low abundance classes"
+##
+Microbiome_total_phylum <- microbiome_melted_analytic[Level_ID=="Phylum", .(sum_phylum= sum(Normalized_Count)),by=.(Name)]
+Microbiome_total_phylum[,total:= sum(sum_phylum)]
+Microbiome_total_phylum[,proportion:= sum_phylum/total , by=.(Name) ]
+
+# Identify rare phyla
+length(unique(Microbiome_total_phylum$Name)) # 45 phyla
+rare_phyla <- Microbiome_total_phylum[proportion < .0005 ,Name]
+
+# 
+Microbiome_phylum_by_ID_edited <- microbiome_melted_analytic[Level_ID=="Phylum", .(sum_phylum = sum(Normalized_Count),TreatmentGroup), by = .(Name,ID)]
+
+Microbiome_phylum_by_ID_edited[(Name %in% rare_phyla), Name := 'Low abundance phyla (< 0.05%)']
+#AMR_class_by_ID_edited[(Name %in% rare_class),]
+
+Microbiome_phylum_by_ID_edited[,sample_total:= sum(sum_phylum), by=.(ID)]
+Microbiome_phylum_by_ID_edited[, percentage := sum_phylum/sample_total *100 ,by=.( Name, ID) ]
+Microbiome_phylum_by_ID_edited[, percentage_label:= as.character(percentage)]
+Microbiome_phylum_by_ID_edited[percentage_label=='0', percentage_label := '<0.05']
+
+# Drop extra factors 
+Microbiome_phylum_by_ID_edited$Name = droplevels(Microbiome_phylum_by_ID_edited$Name)
+unique(factor(Microbiome_phylum_by_ID_edited$Name))
+# Check which factors you have and change the order here
+#Microbiome_phylum_by_ID_edited$Name = factor(Microbiome_phylum_by_ID_edited$Name ,levels=c('Low abundance phyla (< 0.05%)',"Fusobacteria","Tenericutes","Spirochaetes","Actinobacteria", "Proteobacteria","Firmicutes","Bacteroidetes"))
+
+Microbiome_phylum_by_ID_edited$Class <- Microbiome_phylum_by_ID_edited$Name
+#AMR_class_sum[,percentage:= round(sum_phylum/total, digits=2) ,by=.(ID, Name) ] removes some with low proportions
+
+# Plot Normalized counts
+ggplot(Microbiome_phylum_by_ID_edited, aes(x = ID, y = sum_phylum, fill = Name)) + 
+  geom_bar(stat = "identity") +
+  facet_wrap( ~ TreatmentGroup, scales='free_x',ncol = 2) +
+  #scale_fill_brewer(palette="Dark2") +
+  theme(
+    panel.grid.major=element_blank(),
+    panel.grid.minor=element_blank(),
+    strip.text.x=element_text(size=24),
+    strip.text.y=element_text(size=24, angle=0),
+    axis.text.x=element_blank(), #element_text(size=16, angle=20, hjust=1)
+    axis.text.y=element_text(size=22),
+    axis.title=element_text(size=26),
+    legend.position="right",
+    panel.spacing=unit(0.1, "lines"),
+    plot.title=element_text(size=32, hjust=0.5),
+    legend.text=element_text(size=8),
+    legend.title=element_text(size=10),
+    panel.background = element_rect(fill = "white")
+  ) +
+  #ggtitle("CSS counts -resistome composition") +
+  xlab('Sample ID') +
+  ylab('CSS counts')
+
+# Plot relative abundance
+ggplot(Microbiome_phylum_by_ID_edited, aes(x = ID, y = percentage, fill = Name)) + 
+  geom_bar(stat = "identity") +
+  facet_wrap( ~ TreatmentGroup, scales='free_x',ncol = 2) +
+  #scale_fill_brewer(palette="Dark2") +
+  theme(
+    panel.grid.major=element_blank(),
+    panel.grid.minor=element_blank(),
+    strip.text.x=element_text(size=24),
+    strip.text.y=element_text(size=24, angle=0),
+    axis.text.x=element_blank(), #element_text(size=16, angle=20, hjust=1)
+    axis.text.y=element_text(size=22),
+    axis.title=element_text(size=26),
+    legend.position="right",
+    panel.spacing=unit(0.1, "lines"),
+    plot.title=element_text(size=32, hjust=0.5),
+    legend.text=element_text(size=8),
+    legend.title=element_text(size=10),
+    panel.background = element_rect(fill = "white")
+  ) +
+  #ggtitle("CSS counts -resistome composition") +
+  xlab('Sample ID') +
+  ylab('Relative abundance')
+
+
+
