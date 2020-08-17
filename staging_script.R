@@ -87,6 +87,54 @@ AMR_exploratory_analyses = list(
     subsets = list('TreatmentGroup == Grp1'),
     exploratory_var = 'PenID',
     order = ''
+  ),
+  # Analysis 
+  # Description: 
+  list(
+    name = 'CollectionDate',
+    subsets = list(),
+    exploratory_var = 'CollectionDate',
+    order = c('9-28-2018','10-10-2018','11-14-2018','11-19-2018','2-27-2019')
+  ),
+  # Analysis 
+  # Description: 
+  list(
+    name = 'CollectionDate_10-10-2018_byTreatment',
+    subsets = list('CollectionDate == 10-10-2018'),
+    exploratory_var = 'TreatmentGroup',
+    order = c('Grp1','Grp2','Grp3')
+  ),
+  # Analysis 
+  # Description: 
+  list(
+    name = 'CollectionDate_9-28-2018_byTreatment',
+    subsets = list('CollectionDate == 9-28-2018'),
+    exploratory_var = 'TreatmentGroup',
+    order = c('Grp1','Grp2','Grp3')
+  ),
+  # Analysis 
+  # Description: 
+  list(
+    name = 'CollectionDate_11-14-2018_byTreatment',
+    subsets = list('CollectionDate == 11-14-2018'),
+    exploratory_var = 'TreatmentGroup',
+    order = c('Grp1','Grp2','Grp3')
+  ),
+  # Analysis 
+  # Description: 
+  list(
+    name = 'CollectionDate_11-19-2018_byTreatment',
+    subsets = list('CollectionDate == 11-19-2018'),
+    exploratory_var = 'TreatmentGroup',
+    order = c('Grp1','Grp2','Grp3')
+  ),
+  # Analysis 
+  # Description: 
+  list(
+    name = 'CollectionDate_2-27-2019_byTreatment',
+    subsets = list('CollectionDate == 2-27-2019'),
+    exploratory_var = 'TreatmentGroup',
+    order = c('Grp1','Grp2','Grp3')
   )
 )
 
@@ -124,6 +172,46 @@ microbiome_exploratory_analyses = list(
     subsets = list('TreatmentGroup == Grp1'),
     exploratory_var = 'PenID',
     order = ''
+  ),
+  # Analysis 
+  # Description: 
+  list(
+    name = 'CollectionDate_10-10-2018_byTreatment',
+    subsets = list('CollectionDate == 10-10-2018'),
+    exploratory_var = 'TreatmentGroup',
+    order = c('Grp1','Grp2','Grp3')
+  ),
+  # Analysis 
+  # Description: 
+  list(
+    name = 'CollectionDate_9-28-2018_byTreatment',
+    subsets = list('CollectionDate == 9-28-2018'),
+    exploratory_var = 'TreatmentGroup',
+    order = c('Grp1','Grp2','Grp3')
+  ),
+  # Analysis 
+  # Description: 
+  list(
+    name = 'CollectionDate_11-14-2018_byTreatment',
+    subsets = list('CollectionDate == 11-14-2018'),
+    exploratory_var = 'TreatmentGroup',
+    order = c('Grp1','Grp2','Grp3')
+  ),
+  # Analysis 
+  # Description: 
+  list(
+    name = 'CollectionDate_11-19-2018_byTreatment',
+    subsets = list('CollectionDate == 11-19-2018'),
+    exploratory_var = 'TreatmentGroup',
+    order = c('Grp1','Grp2','Grp3')
+  ),
+  # Analysis 
+  # Description: 
+  list(
+    name = 'CollectionDate_2-27-2019_byTreatment',
+    subsets = list('CollectionDate == 2-27-2019'),
+    exploratory_var = 'TreatmentGroup',
+    order = c('Grp1','Grp2','Grp3')
   )
 )
 # Each analyses you wish to perform should have its own list in the following
@@ -229,27 +317,31 @@ Microbiome_total_phylum[,proportion:= sum_phylum/total , by=.(Name) ]
 
 # Identify rare phyla
 length(unique(Microbiome_total_phylum$Name)) # 45 phyla
-rare_phyla <- Microbiome_total_phylum[proportion < .0005 ,Name]
+rare_phyla <- Microbiome_total_phylum[proportion < .005 ,Name]
+length(rare_phyla)
 
 # 
-Microbiome_phylum_by_ID_edited <- microbiome_melted_analytic[Level_ID=="Phylum", .(sum_phylum = sum(Normalized_Count),TreatmentGroup), by = .(Name,ID)]
+Microbiome_phylum_by_ID_edited <- microbiome_melted_analytic[Level_ID=="Phylum", .(sum_phylum = sum(Normalized_Count),TreatmentGroup, CollectionDate,DateByGroup), by = .(Name,ID)]
 
-Microbiome_phylum_by_ID_edited[(Name %in% rare_phyla), Name := 'Low abundance phyla (< 0.05%)']
+Microbiome_phylum_by_ID_edited[(Name %in% rare_phyla), Name := 'Low abundance phyla (< 0.5%)']
 #AMR_class_by_ID_edited[(Name %in% rare_class),]
 
 Microbiome_phylum_by_ID_edited[,sample_total:= sum(sum_phylum), by=.(ID)]
 Microbiome_phylum_by_ID_edited[, percentage := sum_phylum/sample_total *100 ,by=.( Name, ID) ]
 Microbiome_phylum_by_ID_edited[, percentage_label:= as.character(percentage)]
-Microbiome_phylum_by_ID_edited[percentage_label=='0', percentage_label := '<0.05']
+Microbiome_phylum_by_ID_edited[percentage_label=='0', percentage_label := '<0.5']
 
 # Drop extra factors 
 Microbiome_phylum_by_ID_edited$Name = droplevels(Microbiome_phylum_by_ID_edited$Name)
 unique(factor(Microbiome_phylum_by_ID_edited$Name))
 # Check which factors you have and change the order here
-#Microbiome_phylum_by_ID_edited$Name = factor(Microbiome_phylum_by_ID_edited$Name ,levels=c('Low abundance phyla (< 0.05%)',"Fusobacteria","Tenericutes","Spirochaetes","Actinobacteria", "Proteobacteria","Firmicutes","Bacteroidetes"))
+Microbiome_phylum_by_ID_edited$Name = factor(Microbiome_phylum_by_ID_edited$Name ,levels=c('Low abundance phyla (< 0.5%)',"Chordata","Verrucomicrobia","Spirochaetes","Synergistetes","Euryarchaeota","Actinobacteria", "Proteobacteria","Bacteroidetes","Firmicutes"))
 
 Microbiome_phylum_by_ID_edited$Class <- Microbiome_phylum_by_ID_edited$Name
 #AMR_class_sum[,percentage:= round(sum_phylum/total, digits=2) ,by=.(ID, Name) ] removes some with low proportions
+
+Microbiome_phylum_by_ID_edited$CollectionDate = factor(Microbiome_phylum_by_ID_edited$CollectionDate ,levels=c('9-28-2018','10-10-2018','11-14-2018','11-19-2018','12-19-2018','2-27-2019'))
+
 
 # Plot Normalized counts
 ggplot(Microbiome_phylum_by_ID_edited, aes(x = ID, y = sum_phylum, fill = Name)) + 
@@ -275,22 +367,24 @@ ggplot(Microbiome_phylum_by_ID_edited, aes(x = ID, y = sum_phylum, fill = Name))
   xlab('Sample ID') +
   ylab('CSS counts')
 
+library(lemon)
 # Plot relative abundance
 ggplot(Microbiome_phylum_by_ID_edited, aes(x = ID, y = percentage, fill = Name)) + 
   geom_bar(stat = "identity") +
-  facet_wrap( ~ TreatmentGroup, scales='free_x',ncol = 2) +
+  #facet_rep_grid( TreatmentGroup ~ CollectionDate , scales='free') +
+  facet_wrap( ~ DateByGroup, scales='free') +
   #scale_fill_brewer(palette="Dark2") +
   theme(
     panel.grid.major=element_blank(),
     panel.grid.minor=element_blank(),
-    strip.text.x=element_text(size=24),
-    strip.text.y=element_text(size=24, angle=0),
+    strip.text.x=element_text(size=20),
+    strip.text.y=element_text(size=20, angle=0),
     axis.text.x=element_blank(), #element_text(size=16, angle=20, hjust=1)
-    axis.text.y=element_text(size=22),
-    axis.title=element_text(size=26),
+    axis.text.y=element_text(size=20),
+    axis.title=element_text(size=20),
     legend.position="right",
     panel.spacing=unit(0.1, "lines"),
-    plot.title=element_text(size=32, hjust=0.5),
+    plot.title=element_text(size=20, hjust=0.5),
     legend.text=element_text(size=8),
     legend.title=element_text(size=10),
     panel.background = element_rect(fill = "white")
@@ -300,4 +394,30 @@ ggplot(Microbiome_phylum_by_ID_edited, aes(x = ID, y = percentage, fill = Name))
   ylab('Relative abundance')
 
 
+ggplot(Microbiome_phylum_by_ID_edited, aes(x = ID, y = percentage, fill = Name)) + 
+  geom_bar(stat = "identity") +
+  #facet_rep_grid( TreatmentGroup ~ CollectionDate , scales='free') +
+  facet_wrap( ~ CollectionDate + TreatmentGroup , scales='free_x', nrow = 1) +
+  #facet_rep_wrap( ~ CollectionDate + TreatmentGroup , scales='free_x', nrow = 1) +
+  #facet_grid( ~ interaction(CollectionDate, TreatmentGroup), scales='free') +
+  #scale_fill_brewer(palette="Dark2") +
+  theme(
+    panel.grid.major=element_blank(),
+    panel.grid.minor=element_blank(),
+    strip.text.x=element_text(size=6, margin = margin(.5,0,.5,0)),
+    strip.text.y=element_text(size=6, margin = margin(.5,0,.5,0)),
+    axis.text.x=element_blank(), #element_text(size=16, angle=20, hjust=1)
+    axis.text.y=element_text(size=10),
+    axis.title=element_text(size=10),
+    legend.position="right",
+    panel.spacing=unit(0.1, "lines"),
+    plot.title=element_text(size=12, hjust=0.5),
+    legend.text=element_text(size=8),
+    legend.title=element_text(size=10),
+    panel.background = element_rect(fill = "white")
+  ) +
+  #ggtitle("CSS counts -resistome composition") +
+  xlab('Sample ID') +
+  ylab('Relative abundance') + 
+  scale_fill_tableau("Tableau 20", direction = -1) 
 
