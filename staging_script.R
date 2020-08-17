@@ -176,6 +176,14 @@ microbiome_exploratory_analyses = list(
   # Analysis 
   # Description: 
   list(
+    name = 'CollectionDate',
+    subsets = list(),
+    exploratory_var = 'CollectionDate',
+    order = c('9-28-2018','10-10-2018','11-14-2018','11-19-2018','2-27-2019')
+  ),
+  # Analysis 
+  # Description: 
+  list(
     name = 'CollectionDate_10-10-2018_byTreatment',
     subsets = list('CollectionDate == 10-10-2018'),
     exploratory_var = 'TreatmentGroup',
