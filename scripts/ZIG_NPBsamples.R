@@ -1,4 +1,4 @@
-## Analysis for ZIG model
+## Analysis for ZIG model 
 library(statmod)
 
 settings = zigControl(maxit=20, verbose=TRUE)
@@ -24,10 +24,11 @@ resAll_Class_Treatment = fitZig(obj= CSS_filtered_phylum_microbiome.metaseq, mod
 zigFit_Class_Treatment = resAll_Class_Treatment$fit
 finalMod_Class_Treatment = resAll_Class_Treatment$fit$design
 
-# Example contrasts
-contrast_Class_Treatment= makeContrasts(TreatmentGrp1-TreatmentGrp2, levels=finalMod_Class_Treatment)
+# Example contrasts by treatment group
+contrast_Class_Treatment= makeContrasts(TreatmentGrp1-TreatmentGrp2,TreatmentGrp1-TreatmentGrp3,TreatmentGrp2-TreatmentGrp3, levels=finalMod_Class_Treatment)
 res2_Class_Treatment = contrasts.fit(zigFit_Class_Treatment, contrast_Class_Treatment)
 resEB_Class_Treatment = eBayes(res2_Class_Treatment )
 
 # Extract results
-fz_Class_bh <- topTable(resEB_Class_Treatment, coef=1, adjust.method="BH",number = 1000)
+fz_Class_bh <- topTable(resEB_Class_Treatment, adjust.method="BH",number = 1000)
+
